@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For My Sister 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  text-align: center;
+  color: white;
+  overflow-x: hidden;
+}
+h1 { margin-top: 20px; }
+.card {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(12px);
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
+}
+button {
+  background: #ff4d6d;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 25px;
+  color: white;
+  cursor: pointer;
+  margin: 5px;
+}
+button:hover { transform: scale(1.05); }
+.hidden { display: none; }
+.heart { position: absolute; font-size: 20px; animation: floatUp 3s linear; }
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-200px); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<h1>💖 Happy Sister Day 💖</h1>
+
+<!-- Background Music -->
+<audio autoplay loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3" type="audio/mpeg">
+</audio>
+
+<div class="card">
+  <h2>💌 Your Message</h2>
+  <button onclick="unlockMessage()">Open Message</button>
+  <p id="secretMessage" class="hidden"></p>
+</div>
+
+<div class="card">
+  <h2>📸 Our Memories</h2>
+  <img src="https://via.placeholder.com/300" width="100%" />
+</div>
+
+<div class="card">
+  <h2>🧠 Memory Quiz</h2>
+  <p>Where did we fight the most? 😆</p>
+  <button onclick="quiz(false)">Room</button>
+  <button onclick="quiz(true)">Everywhere 😂</button>
+  <p id="quizResult"></p>
+</div>
+
+<div class="card">
+  <h2>❤️ Heart Game</h2>
+  <p id="timer">Time: 10</p>
+  <p>Score: <span id="score">0</span></p>
+  <button onclick="startGame()">Start Game</button>
+</div>
+
+<div class="card">
+  <h2>🎁 Final Surprise</h2>
+  <button onclick="finalSurprise()">Click for Surprise 💖</button>
+</div>
+
+<script>
+// 🔒 Editable message
+const PRIVATE_MESSAGE = "You are not just my sister, you are my best friend, my support, my everything 💖";
+
+function unlockMessage() {
+  const el = document.getElementById('secretMessage');
+  el.innerText = PRIVATE_MESSAGE;
+  el.classList.remove('hidden');
+}
+
+// Quiz
+function quiz(correct) {
+  document.getElementById('quizResult').innerText = correct ? "Correct 😂" : "Nope 😆";
+}
+
+// Heart Game (clean fixed)
+let score = 0;
+let time = 10;
+let gameInterval = null;
+let heartInterval = null;
+
+function startGame() {
+  score = 0;
+  time = 10;
+
+  document.getElementById('score').innerText = score;
+  document.getElementById('timer').innerText = 'Time: ' + time;
+
+  if (gameInterval) clearInterval(gameInterval);
+  if (heartInterval) clearInterval(heartInterval);
+
+  gameInterval = setInterval(() => {
+    time--;
+    document.getElementById('timer').innerText = 'Time: ' + time;
+
+    if (time <= 0) {
+      clearInterval(gameInterval);
+      clearInterval(heartInterval);
+      alert('Game Over! Score: ' + score);
+    }
+  }, 1000);
+
+  spawnHearts();
+}
+
+function spawnHearts() {
+  heartInterval = setInterval(() => {
+    if (time <= 0) return;
+
+    const heart = document.createElement('div');
+    heart.innerHTML = '❤️';
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.top = window.innerHeight + 'px';
+
+    heart.onclick = () => {
+      score++;
+      document.getElementById('score').innerText = score;
+      heart.remove();
+    };
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 3000);
+  }, 400);
+}
+
+// 🎬 Final Surprise
+function finalSurprise() {
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.background = 'linear-gradient(135deg,#ff4d6d,#ff9a9e)';
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+  overlay.style.justifyContent = 'center';
+  overlay.style.alignItems = 'center';
+  overlay.style.zIndex = 9999;
+  overlay.style.textAlign = 'center';
+  overlay.style.padding = '20px';
+
+  overlay.innerHTML = `
+    <h1>💌 A Letter For You</h1>
+    <p style="max-width:400px;font-size:18px;line-height:1.6;">
+      Dear Sister... ❤️<br><br>
+      No matter how much we fight, argue, or annoy each other...
+      you will always be one of the most important people in my life 💖<br><br>
+      You are my childhood, my memories, my laughter, my strength...
+      and my forever best friend 🥹<br><br>
+      Happy Sister Day 💕
+    </p>
+    <button onclick="location.reload()">Close 💖</button>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3');
+  audio.volume = 0.5;
+  audio.play();
+
+  launchConfetti();
+}
+
+// 🎉 Confetti
+function launchConfetti() {
+  for (let i = 0; i < 150; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.position = 'fixed';
+    confetti.style.width = '8px';
+    confetti.style.height = '8px';
+    confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+    confetti.style.top = '50%';
+    confetti.style.left = '50%';
+    confetti.style.zIndex = 10000;
+    confetti.style.borderRadius = '50%';
+
+    document.body.appendChild(confetti);
+
+    const angle = Math.random() * 2 * Math.PI;
+    const distance = Math.random() * 300 + 100;
+
+    const x = Math.cos(angle) * distance;
+    const y = Math.sin(angle) * distance;
+
+    confetti.animate([
+      { transform: 'translate(0,0)', opacity: 1 },
+      { transform: `translate(${x}px, ${y}px)`, opacity: 0 }
+    ], {
+      duration: 1500,
+      easing: 'ease-out'
+    });
+
+    setTimeout(() => confetti.remove(), 1500);
+  }
+}
+</script>
+
+</body>
+</html>
